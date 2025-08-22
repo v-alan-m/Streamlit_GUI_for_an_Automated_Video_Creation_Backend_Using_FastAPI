@@ -32,48 +32,55 @@ st.markdown("""
   background-attachment: fixed;
 }
 
-/* Global page frame control (set alpha to 0 to hide completely) */
+/* ===== Global variables =====
+   - Set --page-frame-* to 0 to remove Streamlit's inner frame
+   - Use --shell-* to control the faint wrapper that sometimes 'frames' everything */
 :root{
   --page-frame-bg: rgba(20,26,36,0.00);   /* background fill of the big outer box */
   --page-frame-br: rgba(85,102,130,0.00); /* border color of the big outer box   */
   --page-frame-radius: 16px;              /* corner radius                       */
-    
-  --shell-bg:    rgba(20,26,36,0.00);  /* 0 = invisible, e.g. 0.35 to show */
-  --shell-br:    rgba(85,102,130,0.00);/* 0 = no border */
-  --shell-radius: 16px;                /* corner radius */
-  --shell-pad:    0px;                 /* extra inner padding if you want it */
 
-  --btn-height: 52px;
+  --shell-bg:    rgba(20,26,36,0.00);     /* 0 = invisible, e.g. 0.35 to show    */
+  --shell-br:    rgba(85,102,130,0.00);   /* 0 = no border                       */
+  --shell-radius: 16px;                   /* corner radius                       */
+  --shell-pad:    0px;                    /* extra inner padding if wanted       */
+
+  --btn-height: 80px;
   --btn-font:   16px;
-  --btn-radius: 10px;
+  --btn-radius: 17px;
+  --btn-hpad: 18px;
 
-  --pb-height:  36px;
-  --pb-radius:  12px;
+  --pb-height:  35px;
+  --pb-radius:  13px;
   --pb-font:    14px;
+  
+  --step-done-bg: rgba(64,137,238,.62);   /* nice, saturated blue with a little transparency */
+  --step-done-br: rgb(64,137,238);        /* solid border color for the edge */
+  --step-error-bg: rgba(200,60,60,0.60);   /* nice, saturated blue with a little transparency */
+  --step-error-br: rgb(200,60,60,1);        /* solid border color for the edge */
+  
+  --group-pad-y: 28px;
+  --group-pad-x: 32px;
+  --group-bottom-extra: 8px; /* 0 to remove */
 }
 
-/* Newer Streamlit containers */
+/* ===== Neutralize Streamlit's default frames ===== */
 div[data-testid="stAppViewContainer"],
 div[data-testid="stMain"]{
   background: transparent !important;
   box-shadow: none !important;
 }
-
-/* The inner main block sometimes gets a theme background/border */
 .block-container{
   background: var(--page-frame-bg) !important;
   border: 1px solid var(--page-frame-br) !important;
   border-radius: var(--page-frame-radius) !important;
   box-shadow: none !important;
 }
-
-/* Safety: zero out any legacy 'main' sections if present */
 section.main, section.main > div{
   background: transparent !important;
   box-shadow: none !important;
   border: 0 !important;
 }
-
 /* Reset ALL Streamlit blocks to transparent by default */
 div[data-testid="stVerticalBlock"] {
   background: transparent !important;
@@ -81,11 +88,23 @@ div[data-testid="stVerticalBlock"] {
   box-shadow: none !important;
 }
 
+/* ===== PAGE SHELL — anchored by #page-shell-anchor =====
+   Target ONLY the direct child block of .block-container that contains our anchor. */
+div[data-testid="stAppViewContainer"] .block-container
+  > div[data-testid="stVerticalBlock"]:has(#page-shell-anchor) {
+  background: var(--shell-bg) !important;
+  border: 1px solid var(--shell-br) !important;
+  border-radius: var(--shell-radius) !important;
+  padding: var(--shell-pad) !important;
+  box-shadow: none !important;
+}
+
 /* ===== Base type & titles ===== */
 html, body, [class*="css"] { font-family: "Segoe UI", Inter, system-ui, -apple-system, Arial, sans-serif; color: #e9eef7; }
 .page-title    { text-align:center; margin: 10px 0 6px 0; font-weight: 900; font-size: 40px; letter-spacing: .2px; color:#ffffff; }
-.page-sub      { text-align:center; margin-bottom: 18px; color:#cfd6df; }
-.section-title { margin: 18px 0 8px 0; font-weight: 800; color:#ffffff; }
+.page-sub      { text-align:center; margin-bottom: 18px; font-weight: 800; font-size: 26px; color:#cfd6df; }
+.section-title { margin: 18px 0 8px 0; font-weight: 800; font-size: 22px; color:#ffffff; }
+.section-title.center { text-align:center; }
 
 /* ===== Group boxes (ONLY for the two sections we want) =====
    Important: These come AFTER the global reset so they win. */
@@ -94,7 +113,7 @@ div[data-testid="stVerticalBlock"]:has(#steps-anchor) {
   background: rgba(20,26,36,0.50) !important;
   border: 1px solid rgba(85,102,130,0.40) !important;
   border-radius: 17px !important;
-  padding: 44px !important;  /* adjust */
+  padding: var(--group-pad-y) var(--group-pad-x) !important;
 }
 /* Equalize visual padding (kill stray inner margins) */
 div[data-testid="stVerticalBlock"]:has(#controls-anchor) > div:first-child,
@@ -104,7 +123,7 @@ div[data-testid="stVerticalBlock"]:has(#steps-anchor)    > div:last-child  { mar
 /* Tiny bottom spacer to make bottom match top visually */
 div[data-testid="stVerticalBlock"]:has(#controls-anchor)::after,
 div[data-testid="stVerticalBlock"]:has(#steps-anchor)::after {
-  content: ""; display:block; height: 13px;  /* adjust */
+  content: ""; display:block; height: var(--group-bottom-extra);
 }
 
 /* ===== Cards ===== */
@@ -116,8 +135,16 @@ div[data-testid="stVerticalBlock"]:has(#steps-anchor)::after {
   color: #e8eef7;
 }
 .card.top { min-height: 120px; display:flex; align-items:center; justify-content:center; text-align:center; }
-.card.done  { background: rgba(24,151,78,0.60);  border-color: rgba(24,151,78,1); color:#fff; }
-.card.error { background: rgba(200,60,60,0.60); border-color: rgba(200,60,60,1); color:#fff; }
+.card.done{
+  background: var(--step-done-bg);
+  border-color: var(--step-done-br);
+  color:#fff;
+  }
+.card.error{
+  background: var(--step-error-bg);
+  border-color: var(--step-error-br);
+  color:#fff;
+}
 
 /* ===== Step cards (centered, no bullets) ===== */
 .step-card  { text-align:center; padding: 17px; }
@@ -132,23 +159,38 @@ div[data-testid="stVerticalBlock"]:has(#steps-anchor)::after {
 
 /* ===== Progress bar ===== */
 .progress-wrap {
-  width: 100%; background: rgba(38,46,60,0.62);  /* adjust */
+  width: 100%;
+  background: rgba(38,46,60,0.62);
   border: 1px solid rgba(85,102,130,0.72);
-  border-radius: 10px; position: relative; overflow: hidden; color:#fff;
-  margin: 6px 0; /* symmetric spacing inside group box */
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+  color:#fff;
+  margin: 6px 0;
 }
 .progress-bar   { height:100%; width:0%; background: rgb(24,151,78); transition: width .12s linear; }
 .progress-label { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-weight:800; }
 
-/* Buttons use the central knobs */
+/* ===== Size knobs ===== */
+/* Buttons use the central knobs (IDs are your stylable_container ids) */
 #btn-start button,
 #btn-stop  button,
-#btn-reset button{
-  min-height: var(--btn-height) !important;
-  padding: 0 18px !important;
+#btn-reset button,
+#btn-start [data-testid="baseButton-primary"],
+#btn-start [data-testid="baseButton-secondary"],
+#btn-stop  [data-testid="baseButton-primary"],
+#btn-stop  [data-testid="baseButton-secondary"],
+#btn-reset [data-testid="baseButton-primary"],
+#btn-reset [data-testid="baseButton-secondary"]{
+  height: var(--btn-height) !important;
+  min-height: var(--btn-height) !important;   /* belt & suspenders */
+  padding: 0 var(--btn-hpad) !important;      /* vertical size now driven by height */
   font-size: var(--btn-font) !important;
   border-radius: var(--btn-radius) !important;
-  line-height: 1.1 !important;
+  line-height: 1 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
 }
 
 /* Progress bar uses the central knobs */
@@ -173,16 +215,18 @@ if "running" not in st.session_state:
     st.session_state.step_states = ["idle", "idle", "idle"]
 
 STEPS = [
-    {"title": "Story Creation",   "desc": "Generating story using ChatGPT API",   "duration": 3.0},
-    {"title": "Video Generation", "desc": "Automating 3rd-party web app",         "duration": 3.0},
-    {"title": "File Download",    "desc": "Downloading completed video file",     "duration": 3.0},
+    {"title": "Story Creation", "desc": "Generating story using ChatGPT API", "duration": 3.0},
+    {"title": "Video Generation", "desc": "Automating 3rd-party web app", "duration": 3.0},
+    {"title": "File Download", "desc": "Downloading completed video file", "duration": 3.0},
 ]
+
 
 # =========================
 # Helpers
 # =========================
 def add_log(level: str, msg: str):
     st.session_state.logs.append((datetime.now().strftime("%H:%M:%S"), level, msg))
+
 
 def start():
     if st.session_state.running: return
@@ -198,10 +242,12 @@ def start():
     add_log("INFO", "Initializing ChatGPT API connection")
     add_log("INFO", "Sending story generation prompt")
 
+
 def stop():
     st.session_state.stop_flag = True
     st.session_state.running = False
     add_log("INFO", "Pipeline stopped by user")
+
 
 def reset():
     st.session_state.running = False
@@ -213,6 +259,7 @@ def reset():
     st.session_state.progress = 0.0
     st.session_state.logs = []
     st.session_state.step_states = ["idle", "idle", "idle"]
+
 
 def tick():
     if not st.session_state.running or st.session_state.stop_flag or st.session_state.error:
@@ -229,7 +276,7 @@ def tick():
     st.session_state.progress = (idx + step_pct) / len(STEPS)
 
     if abs(elapsed) < 0.12:
-        add_log("INFO", f"Step {idx+1}/{len(STEPS)}: {step['desc']}")
+        add_log("INFO", f"Step {idx + 1}/{len(STEPS)}: {step['desc']}")
 
     if step_pct >= 1.0:
         st.session_state.step_states[idx] = "done"
@@ -241,20 +288,27 @@ def tick():
             st.session_state.running = False
             add_log("SUCCESS", "Workflow completed.")
 
+
 # =========================
 # Title
 # =========================
-st.markdown('<div class="page-title">Python Workflow Monitor</div>', unsafe_allow_html=True)
-st.markdown('<div class="page-sub">Monitor your automated story creation and video generation pipeline</div>', unsafe_allow_html=True)
+st.markdown('<div class="page-title">StoryMorph: Story Creation + Automated Video Generation</div>',
+            unsafe_allow_html=True)
+st.markdown('<div class="page-sub">"From Imagination to Animation — Fully Automated -> Ready for Social Media!"</div>',
+            unsafe_allow_html=True)
+
+# >>> Shell anchor (controls the subtle outer wrapper via --shell-*) <<<
+st.markdown('<div id="page-shell-anchor"></div>', unsafe_allow_html=True)
 
 # =========================
 # Top row (Status & Timing)
 # =========================
 col_status, col_timing = st.columns(2, gap="small")
 with col_status:
-    st.markdown('<div class="section-title">Status</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-title center">Status</div>', unsafe_allow_html=True)
     status_text = "Running" if st.session_state.running else ("Error" if st.session_state.error else "Idle")
-    badge_class = "badge running" if st.session_state.running else ("badge error" if st.session_state.error else "badge idle")
+    badge_class = "badge running" if st.session_state.running else (
+        "badge error" if st.session_state.error else "badge idle")
     st.markdown(f"""
         <div class="card top">
           <div>
@@ -265,11 +319,12 @@ with col_status:
     """, unsafe_allow_html=True)
 
 with col_timing:
-    st.markdown('<div class="section-title">Timing</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-title center">Timing</div>', unsafe_allow_html=True)
     started = st.session_state.start_time.strftime("%H:%M:%S") if st.session_state.start_time else "--:--:--"
     if st.session_state.start_time:
         delta = datetime.now() - st.session_state.start_time
-        duration_text = "less than a minute" if delta < timedelta(minutes=1) else f"{int(delta.total_seconds()//60)} min"
+        duration_text = "less than a minute" if delta < timedelta(
+            minutes=1) else f"{int(delta.total_seconds() // 60)} min"
     else:
         duration_text = "—"
     st.markdown(f"""
@@ -293,10 +348,10 @@ with st.container():
     # --- START (green / dim green when disabled) ---
     with c1:
         with stylable_container(
-            "btn-start",
-            css_styles="""
+                "btn-start",
+                css_styles="""
                 button {
-                    background: #199a57 !important;        /* green */
+                    background: #05472A !important;        /* green */
                     border: 1px solid #158e4e !important;
                     color: #ffffff !important; font-weight: 800;
                     box-shadow: none !important;
@@ -317,8 +372,8 @@ with st.container():
     # --- STOP (red / dim red when disabled) ---
     with c2:
         with stylable_container(
-            "btn-stop",
-            css_styles="""
+                "btn-stop",
+                css_styles="""
                 button {
                     background: #b43838 !important;         /* red */
                     border: 1px solid #9b3232 !important;
@@ -341,8 +396,8 @@ with st.container():
     # --- RESET (black / dim black when disabled) ---
     with c3:
         with stylable_container(
-            "btn-reset",
-            css_styles="""
+                "btn-reset",
+                css_styles="""
                 button {
                     background: #0f141b !important;          /* black */
                     border: 1px solid #323c4a !important;
@@ -365,7 +420,8 @@ with st.container():
     st.markdown("<div style='height:12px'></div>", unsafe_allow_html=True)
 
     # Progress (unchanged)
-    st.markdown('<div class="section-title" style="margin: 2px 0 8px 0;">Progress Tracker</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-title" style="margin: 2px 0 8px 0;">Progress Tracker</div>',
+                unsafe_allow_html=True)
     pct = int(st.session_state.progress * 100)
     st.markdown(f"""
         <div class="progress-wrap">
@@ -385,7 +441,8 @@ with st.container():
     for i, col in enumerate((s1, s2, s3)):
         step = STEPS[i]
         state = st.session_state.step_states[i]
-        card_cls = "card step-card" if state == "idle" else ("card step-card done" if state == "done" else "card step-card error")
+        card_cls = "card step-card" if state == "idle" else (
+            "card step-card done" if state == "done" else "card step-card error")
         with col:
             st.markdown(f"""
                 <div class="{card_cls}">
@@ -402,7 +459,7 @@ st.markdown('<div class="section-title">Live Logs</div>', unsafe_allow_html=True
 entries = []
 for ts, level, msg in st.session_state.logs[-400:]:
     klass = "success" if level == "SUCCESS" else ("error" if level == "ERROR" else "")
-    pill  = " success" if klass=="success" else (" error" if klass=="error" else "")
+    pill = " success" if klass == "success" else (" error" if klass == "error" else "")
     entries.append(
         f'''
         <div class="lg-card {klass}">
