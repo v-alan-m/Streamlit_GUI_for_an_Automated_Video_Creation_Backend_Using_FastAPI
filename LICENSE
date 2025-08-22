@@ -1,0 +1,82 @@
+Proprietary & Confidential License (All Rights Reserved)
+Version 1.0 — 2025-08-22
+
+Copyright © 2025 XLaunch Ltd. All rights reserved.
+
+NOTICE: This software, its source code, and all accompanying materials
+(collectively, the “Software”) are proprietary and confidential. No license
+is granted to any party other than the repository owner (“Licensee”).
+By accessing or using the Software, you agree to the following terms:
+
+1) No Redistribution or Disclosure
+   You may not copy, distribute, publish, sublicense, sell, lease, loan, or
+   otherwise transfer the Software or any derivative works to any third party.
+   You may not disclose the Software or any of its components, designs, or
+   documentation to any third party.
+
+2) No Derivative Works or Reverse Engineering
+   You may not modify, translate, adapt, create derivative works, reverse
+   engineer, decompile, disassemble, or otherwise attempt to derive the
+   source code, algorithms, or underlying ideas of the Software, except to
+   the limited extent expressly permitted by applicable law notwithstanding
+   this limitation.
+
+3) Internal Use Only
+   The Software may be used solely by the Licensee for internal evaluation
+   and development. Commercial use, public deployment, or distribution is
+   prohibited unless a separate, signed license agreement grants such rights.
+
+4) No Data Mining or Model Training
+   You may not use the Software or any data derived from it to train,
+   fine‑tune, benchmark, or improve any machine learning or AI models,
+   nor to create datasets for such purposes.
+
+5) Confidentiality
+   The Software is confidential information. You must protect it using at
+   least the same degree of care as your own confidential information, and
+   in no event less than reasonable care.
+
+6) Security and Access Controls
+   You must implement reasonable technical and organizational measures to
+   prevent unauthorized access to the Software. Access must be limited to
+   individuals under your control who are bound by written confidentiality
+   obligations at least as protective as these terms.
+
+7) Compliance and Audit
+   Upon reasonable notice, Licensor may request written certification of your
+   compliance with this license. You agree to cooperate in good faith and
+   provide information reasonably necessary to verify compliance.
+
+8) Termination
+   Any breach of these terms automatically terminates your permission to use
+   the Software. Upon termination, you must immediately cease all use and
+   destroy all copies.
+
+9) No Warranty; Limitation of Liability
+   THE SOFTWARE IS PROVIDED “AS IS” WITHOUT WARRANTIES OF ANY KIND, EXPRESS
+   OR IMPLIED, INCLUDING WITHOUT LIMITATION WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE, NON‑INFRINGEMENT, AND TITLE. TO THE
+   MAXIMUM EXTENT PERMITTED BY LAW, THE LICENSOR SHALL NOT BE LIABLE FOR ANY
+   INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, EXEMPLARY, OR PUNITIVE
+   DAMAGES, OR FOR ANY LOSS OF PROFITS, REVENUE, DATA, OR USE, EVEN IF
+   ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+
+10) Export, Sanctions, and Legal Compliance
+    You agree to comply with all applicable laws, including export control,
+    sanctions, and data protection laws, in connection with your use of the
+    Software.
+
+11) Reservation of Rights
+    Except for the limited, revocable permission stated above, all rights are
+    reserved by the copyright holder.
+
+12) Governing Law; Venue
+    These terms are governed by the laws of the jurisdiction of the copyright
+    holder, without regard to conflict‑of‑law principles. Any action arising
+    from or relating to these terms shall be brought exclusively in courts
+    located in that jurisdiction.
+
+Contact for licensing inquiries: <email for now message on GitHub, thanks. 👍>
+
+IF YOU ARE NOT THE INTENDED LICENSEE, YOU MUST NOT USE, COPY, OR RETAIN THE
+SOFTWARE AND SHOULD DELETE ALL COPIES IMMEDIATELY.
