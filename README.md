@@ -6,9 +6,9 @@ A sleek Streamlit dashboard to **monitor and control** an automated pipeline for
 
 ## 💻 Screenshots
 
-![Dashboard](readme images/before_use.png)
+![Dashboard](readme_images/before_use.png)
 
-![Dashboard](readme images/after_use.png)
+![Dashboard](readme_images/after_use.png)
 
 ---
 
