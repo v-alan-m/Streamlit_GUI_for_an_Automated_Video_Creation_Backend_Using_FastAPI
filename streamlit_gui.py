@@ -34,7 +34,7 @@ st.markdown("""
 
 /* ===== Global variables =====
    - Set --page-frame-* to 0 to remove Streamlit's inner frame
-   - Use --shell-* to control the faint wrapper that sometimes 'frames' everything */
+   - Use --shell-* to control the faint wrapper that sometimes ‘frames’ everything */
 :root{
   --page-frame-bg: rgba(20,26,36,0.00);   /* background fill of the big outer box */
   --page-frame-br: rgba(85,102,130,0.00); /* border color of the big outer box   */
@@ -45,23 +45,23 @@ st.markdown("""
   --shell-radius: 16px;                   /* corner radius                       */
   --shell-pad:    0px;                    /* extra inner padding if wanted       */
 
-  --btn-height: 80px;
+  --btn-height: 53px;
   --btn-font:   16px;
   --btn-radius: 17px;
-  --btn-hpad: 18px;
+  --btn-hpad:   18px;
 
   --pb-height:  35px;
   --pb-radius:  13px;
   --pb-font:    14px;
-  
-  --step-done-bg: rgba(64,137,238,.62);   /* nice, saturated blue with a little transparency */
-  --step-done-br: rgb(64,137,238);        /* solid border color for the edge */
-  --step-error-bg: rgba(200,60,60,0.60);   /* nice, saturated blue with a little transparency */
-  --step-error-br: rgb(200,60,60,1);        /* solid border color for the edge */
-  
-  --group-pad-y: 28px;
-  --group-pad-x: 32px;
-  --group-bottom-extra: 8px; /* 0 to remove */
+
+  --step-done-bg:  rgba(64,137,238,.62);  /* blue done */
+  --step-done-br:  rgb(64,137,238);
+  --step-error-bg: rgba(200,60,60,0.60);  /* red error */
+  --step-error-br: rgb(200,60,60);
+
+  --group-pad-y:        28px;  /* group box vertical padding */
+  --group-pad-x:        32px;  /* group box horizontal padding */
+  --group-bottom-extra:  8px;  /* extra bottom spacer under group boxes */
 }
 
 /* ===== Neutralize Streamlit's default frames ===== */
@@ -107,7 +107,7 @@ html, body, [class*="css"] { font-family: "Segoe UI", Inter, system-ui, -apple-s
 .section-title.center { text-align:center; }
 
 /* ===== Group boxes (ONLY for the two sections we want) =====
-   Important: These come AFTER the global reset so they win. */
+   These come AFTER the resets so they win. */
 div[data-testid="stVerticalBlock"]:has(#controls-anchor),
 div[data-testid="stVerticalBlock"]:has(#steps-anchor) {
   background: rgba(20,26,36,0.50) !important;
@@ -115,7 +115,6 @@ div[data-testid="stVerticalBlock"]:has(#steps-anchor) {
   border-radius: 17px !important;
   padding: var(--group-pad-y) var(--group-pad-x) !important;
 }
-/* Equalize visual padding (kill stray inner margins) */
 div[data-testid="stVerticalBlock"]:has(#controls-anchor) > div:first-child,
 div[data-testid="stVerticalBlock"]:has(#steps-anchor)    > div:first-child { margin-top: 0 !important; }
 div[data-testid="stVerticalBlock"]:has(#controls-anchor) > div:last-child,
@@ -123,7 +122,9 @@ div[data-testid="stVerticalBlock"]:has(#steps-anchor)    > div:last-child  { mar
 /* Tiny bottom spacer to make bottom match top visually */
 div[data-testid="stVerticalBlock"]:has(#controls-anchor)::after,
 div[data-testid="stVerticalBlock"]:has(#steps-anchor)::after {
-  content: ""; display:block; height: var(--group-bottom-extra);
+  content: "";
+  display:block;
+  height: var(--group-bottom-extra);
 }
 
 /* ===== Cards ===== */
@@ -135,20 +136,12 @@ div[data-testid="stVerticalBlock"]:has(#steps-anchor)::after {
   color: #e8eef7;
 }
 .card.top { min-height: 120px; display:flex; align-items:center; justify-content:center; text-align:center; }
-.card.done{
-  background: var(--step-done-bg);
-  border-color: var(--step-done-br);
-  color:#fff;
-  }
-.card.error{
-  background: var(--step-error-bg);
-  border-color: var(--step-error-br);
-  color:#fff;
-}
+.card.done  { background: var(--step-done-bg);  border-color: var(--step-done-br);  color:#fff; }
+.card.error { background: var(--step-error-bg); border-color: var(--step-error-br); color:#fff; }
 
-/* ===== Step cards (centered, no bullets) ===== */
+/* ===== Step cards ===== */
 .step-card  { text-align:center; padding: 17px; }
-.step-title { font-weight: 800; letter-spacing: .2px; display:block; margin-bottom:6px; }
+.step-title { font-weight: 840; letter-spacing: .2px; display:block; margin-bottom:6px; }
 .step-desc  { opacity:.53; }
 
 /* ===== Status badge ===== */
@@ -172,7 +165,7 @@ div[data-testid="stVerticalBlock"]:has(#steps-anchor)::after {
 .progress-label { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-weight:800; }
 
 /* ===== Size knobs ===== */
-/* Buttons use the central knobs (IDs are your stylable_container ids) */
+/* Buttons (IDs come from stylable_container) */
 #btn-start button,
 #btn-stop  button,
 #btn-reset button,
@@ -183,8 +176,8 @@ div[data-testid="stVerticalBlock"]:has(#steps-anchor)::after {
 #btn-reset [data-testid="baseButton-primary"],
 #btn-reset [data-testid="baseButton-secondary"]{
   height: var(--btn-height) !important;
-  min-height: var(--btn-height) !important;   /* belt & suspenders */
-  padding: 0 var(--btn-hpad) !important;      /* vertical size now driven by height */
+  min-height: var(--btn-height) !important;
+  padding: 0 var(--btn-hpad) !important;   /* vertical size driven by height */
   font-size: var(--btn-font) !important;
   border-radius: var(--btn-radius) !important;
   line-height: 1 !important;
@@ -199,6 +192,7 @@ div[data-testid="stVerticalBlock"]:has(#steps-anchor)::after {
 .progress-label { font-size: var(--pb-font) !important; font-weight: 800; }
 </style>
 """, unsafe_allow_html=True)
+
 
 # =========================
 # Session state
@@ -478,9 +472,11 @@ logs_html = f"""
   background: rgba(20,26,36,0.50);
   border: 1px solid rgba(85,102,130,0.40);
   border-radius: 14px;
-  padding: 16px;
+  height: 100%;                       /* fill the iframe */
+  padding: 16px 16px 22px;            /* keep extra bottom padding */
+  box-sizing: border-box;
 }}
-.lg-scroll {{ height: 400px; overflow:auto; padding:8px 2px 2px 2px; }}
+.lg-scroll {{ height: 360px; overflow:auto; padding:8px 2px 8px 2px, box-sizing: border-box;; }}
 .lg-grid   {{ display:grid; grid-auto-rows:min-content; row-gap:10px; }}
 
 .lg-card {{
@@ -505,14 +501,20 @@ logs_html = f"""
 </style>
 
 <div class="lg-panel">
-  <div class="lg-scroll">
+  <div class="lg-scroll" id="lg-scroll">
     <div class="lg-grid">
       {''.join(entries)}
     </div>
   </div>
 </div>
+
+<script>
+  // Optional: auto-scroll to the newest log on render
+  const s = document.getElementById('lg-scroll');
+  if (s) s.scrollTop = s.scrollHeight;
+</script>
 """
-st_html(logs_html, height=380, scrolling=False)
+st_html(logs_html, height=440, scrolling=False)
 
 # =========================
 # Sim loop
