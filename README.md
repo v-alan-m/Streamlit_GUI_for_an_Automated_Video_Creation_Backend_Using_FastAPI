@@ -8,6 +8,8 @@ A sleek Streamlit dashboard to **monitor and control** an automated pipeline for
 
 ![Dashboard](readme_images/before_use.png)
 
+![Dashboard](readme_images/during_use.png)
+
 ![Dashboard](readme_images/after_use.png)
 
 ---
