@@ -357,9 +357,7 @@ def tick():
 # =========================
 st.markdown('<div class="page-title">StoryMorph: <br> From Imagination to Animation – Fully Automated<br>',
             unsafe_allow_html=True)
-st.markdown('<div class="page-sub">Choose Topic + Create Original Script + Create Video and Narration</div>',
-            unsafe_allow_html=True)
-st.markdown('<div class="page-sub">Ready for Social Media!</div>',
+st.markdown('<div class="page-sub">Create your original social-media-ready videos, in one click!</div>',
             unsafe_allow_html=True)
 
 # >>> Shell anchor (controls the subtle outer wrapper via --shell-*) <<<
