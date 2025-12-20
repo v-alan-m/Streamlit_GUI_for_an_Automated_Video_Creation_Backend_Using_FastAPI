@@ -1,4 +1,4 @@
-# app.py — Python Workflow Monitor (Streamlit)
+# app.py – Python Workflow Monitor (Streamlit)
 # - Group boxes back (robust): :has(#controls-anchor) and :has(#steps-anchor)
 # - Transparent global wrapper (no giant outer box)
 # - Buttons with state-aware colors; no hover lightening
@@ -34,34 +34,79 @@ st.markdown("""
 
 /* ===== Global variables =====
    - Set --page-frame-* to 0 to remove Streamlit's inner frame
-   - Use --shell-* to control the faint wrapper that sometimes ‘frames’ everything */
+   - Use --shell-* to control the faint wrapper that sometimes 'frames' everything */
 :root{
-  --page-frame-bg: rgba(20,26,36,0.00);   /* background fill of the big outer box */
-  --page-frame-br: rgba(85,102,130,0.00); /* border color of the big outer box   */
-  --page-frame-radius: 16px;              /* corner radius                       */
+  /* ===== Glassmorphism Settings ===== */
+  --glass-blur:      8px;                 /* backdrop blur amount for glassmorphic effect */
+  --glass-alpha:     0.26;                 /* transparency for glassmorphic surfaces (lower = more transparent) */
 
-  --shell-bg:    rgba(20,26,36,0.00);     /* 0 = invisible, e.g. 0.35 to show    */
-  --shell-br:    rgba(85,102,130,0.00);   /* 0 = no border                       */
-  --shell-radius: 16px;                   /* corner radius                       */
-  --shell-pad:    0px;                    /* extra inner padding if wanted       */
+  /* ===== Active/Done Step Glassmorphism ===== */
+  --step-glass-alpha: 0.25;                /* transparency for active/done steps */
+  --step-glass-blur:  10px;                /* blur for active/done steps */
 
+  /* ===== Border Toggle (1 = with border, 0 = without border) ===== */
+  --use-borders: 0;                        /* Toggle between border styles: 1 = borders ON, 0 = borders OFF */
+
+  /* ===== Border Styles (when --use-borders = 1) ===== */
+  --border-width-on:  1px;
+  --border-opacity-on: 1;
+
+  /* ===== No Border Styles (when --use-borders = 0) ===== */
+  --border-width-off: 0px;
+  --border-opacity-off: 0;
+
+  /* ===== Button Colors (RGB format for flexibility) ===== */
+  --btn-start-bg:     5, 71, 42;           /* green background */
+  --btn-start-border: 21, 142, 78;         /* green border */
+  --btn-stop-bg:      180, 56, 56;         /* red background */
+  --btn-stop-border:  155, 50, 50;         /* red border */
+  --btn-reset-bg:     15, 20, 27;          /* black background */
+  --btn-reset-border: 50, 60, 74;          /* grey border */
+
+  /* ===== Shared Box Colors & Transparency ===== */
+  --box-bg-color:    20, 26, 36;           /* RGB values for dark blue background */
+  --box-bg-alpha:    var(--glass-alpha);   /* uses glassmorphism transparency */
+  --box-border-color: 85, 102, 130;        /* RGB values for border */
+  --box-border-alpha: 0.40;                /* transparency for borders (0-1) */
+  --box-radius:      17px;                 /* corner radius for boxes */
+
+  /* ===== Card Colors & Transparency ===== */
+  --card-bg-color:   26, 34, 45;           /* RGB values for card background */
+  --card-bg-alpha:   var(--glass-alpha);   /* uses glassmorphism transparency */
+  --card-border-color: 95, 110, 132;       /* RGB values for card border */
+  --card-border-alpha: 0.50;               /* transparency for card borders (0-1) */
+  --card-radius:     14px;                 /* corner radius for cards */
+
+  /* ===== Step State Colors ===== */
+  --step-done-color:  64, 137, 238;        /* blue for done state */
+  --step-error-color: 200, 60, 60;         /* red for error state */
+
+  /* ===== Page Frame (outer wrapper) ===== */
+  --page-frame-bg: rgba(20,26,36,0.00);    /* 0 = invisible */
+  --page-frame-br: rgba(85,102,130,0.00);  /* 0 = invisible */
+  --page-frame-radius: 16px;
+
+  /* ===== Shell (global wrapper) ===== */
+  --shell-bg:    rgba(20,26,36,0.00);      /* 0 = invisible */
+  --shell-br:    rgba(85,102,130,0.00);    /* 0 = invisible */
+  --shell-radius: 16px;
+  --shell-pad:    0px;
+
+  /* ===== Button Sizes ===== */
   --btn-height: 53px;
   --btn-font:   16px;
   --btn-radius: 17px;
   --btn-hpad:   18px;
 
+  /* ===== Progress Bar Sizes ===== */
   --pb-height:  35px;
   --pb-radius:  13px;
   --pb-font:    14px;
 
-  --step-done-bg:  rgba(64,137,238,.62);  /* blue done */
-  --step-done-br:  rgb(64,137,238);
-  --step-error-bg: rgba(200,60,60,0.60);  /* red error */
-  --step-error-br: rgb(200,60,60);
-
-  --group-pad-y:        28px;  /* group box vertical padding */
-  --group-pad-x:        32px;  /* group box horizontal padding */
-  --group-bottom-extra:  8px;  /* extra bottom spacer under group boxes */
+  /* ===== Group Box Padding ===== */
+  --group-pad-y:        28px;
+  --group-pad-x:        32px;
+  --group-bottom-extra:  8px;
 }
 
 /* ===== Neutralize Streamlit's default frames ===== */
@@ -88,7 +133,7 @@ div[data-testid="stVerticalBlock"] {
   box-shadow: none !important;
 }
 
-/* ===== PAGE SHELL — anchored by #page-shell-anchor =====
+/* ===== PAGE SHELL – anchored by #page-shell-anchor =====
    Target ONLY the direct child block of .block-container that contains our anchor. */
 div[data-testid="stAppViewContainer"] .block-container
   > div[data-testid="stVerticalBlock"]:has(#page-shell-anchor) {
@@ -107,13 +152,16 @@ html, body, [class*="css"] { font-family: "Segoe UI", Inter, system-ui, -apple-s
 .section-title.center { text-align:center; }
 
 /* ===== Group boxes (ONLY for the two sections we want) =====
-   These come AFTER the resets so they win. */
+   These come AFTER the resets so they win. 
+   Uses: --box-bg-color, --box-bg-alpha, --box-border-color, --box-border-alpha, --box-radius, --glass-blur */
 div[data-testid="stVerticalBlock"]:has(#controls-anchor),
 div[data-testid="stVerticalBlock"]:has(#steps-anchor) {
-  background: rgba(20,26,36,0.50) !important;
-  border: 1px solid rgba(85,102,130,0.40) !important;
-  border-radius: 17px !important;
+  background: rgba(var(--box-bg-color), var(--box-bg-alpha)) !important;
+  border: 1px solid rgba(var(--box-border-color), var(--box-border-alpha)) !important;
+  border-radius: var(--box-radius) !important;
   padding: var(--group-pad-y) var(--group-pad-x) !important;
+  backdrop-filter: blur(var(--glass-blur)) !important;
+  -webkit-backdrop-filter: blur(var(--glass-blur)) !important;
 }
 div[data-testid="stVerticalBlock"]:has(#controls-anchor) > div:first-child,
 div[data-testid="stVerticalBlock"]:has(#steps-anchor)    > div:first-child { margin-top: 0 !important; }
@@ -127,17 +175,34 @@ div[data-testid="stVerticalBlock"]:has(#steps-anchor)::after {
   height: var(--group-bottom-extra);
 }
 
-/* ===== Cards ===== */
+/* ===== Cards =====
+   Uses: --card-bg-color, --card-bg-alpha, --card-border-color, --card-border-alpha, --card-radius, --glass-blur */
 .card {
-  background: rgba(26,34,45,0.78);
-  border: 1px solid rgba(95,110,132,0.50);
-  border-radius: 14px;
+  background: rgba(var(--card-bg-color), var(--card-bg-alpha));
+  border: 1px solid rgba(var(--card-border-color), var(--card-border-alpha));
+  border-radius: var(--card-radius);
   padding: 18px 20px;
-  color: #e8eef7;
+  color: #e9eef7;
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
 }
 .card.top { min-height: 120px; display:flex; align-items:center; justify-content:center; text-align:center; }
-.card.done  { background: var(--step-done-bg);  border-color: var(--step-done-br);  color:#fff; }
-.card.error { background: var(--step-error-bg); border-color: var(--step-error-br); color:#fff; }
+.card.done  { 
+  background: rgba(var(--step-done-color), var(--step-glass-alpha));
+  border-width: calc(var(--use-borders) * var(--border-width-on) + (1 - var(--use-borders)) * var(--border-width-off));
+  border-style: solid;
+  border-color: rgba(var(--step-done-color), calc(var(--use-borders) * var(--border-opacity-on) + (1 - var(--use-borders)) * var(--border-opacity-off)));
+  color:#fff;
+  backdrop-filter: blur(var(--step-glass-blur));
+  -webkit-backdrop-filter: blur(var(--step-glass-blur));
+}
+.card.error { 
+  background: rgba(var(--step-error-color), 0.60);
+  border-width: calc(var(--use-borders) * var(--border-width-on) + (1 - var(--use-borders)) * var(--border-width-off));
+  border-style: solid;
+  border-color: rgba(var(--step-error-color), calc(var(--use-borders) * var(--border-opacity-on) + (1 - var(--use-borders)) * var(--border-opacity-off)));
+  color:#fff;
+}
 
 /* ===== Step cards ===== */
 .step-card  { text-align:center; padding: 17px; }
@@ -193,7 +258,6 @@ div[data-testid="stVerticalBlock"]:has(#steps-anchor)::after {
 </style>
 """, unsafe_allow_html=True)
 
-
 # =========================
 # Session state
 # =========================
@@ -206,11 +270,16 @@ if "running" not in st.session_state:
     st.session_state.step_started = None
     st.session_state.progress = 0.0
     st.session_state.logs = []
-    st.session_state.step_states = ["idle", "idle", "idle"]
+    st.session_state.step_states = ["idle", "idle", "idle", "idle", "idle"]
+    # Store glassmorphic values for iframe access
+    st.session_state.glass_alpha = 0.15
+    st.session_state.glass_blur = 12
 
 STEPS = [
     {"title": "Story Creation", "desc": "Generating story using ChatGPT API", "duration": 3.0},
-    {"title": "Video Generation", "desc": "Automating 3rd-party web app", "duration": 3.0},
+    {"title": "Image Generation", "desc": "Creating visual content", "duration": 3.0},
+    {"title": "Narration Generation", "desc": "Generating voice narration", "duration": 3.0},
+    {"title": "Caption Generation", "desc": "Creating subtitles and captions", "duration": 3.0},
     {"title": "File Download", "desc": "Downloading completed video file", "duration": 3.0},
 ]
 
@@ -231,7 +300,7 @@ def start():
     st.session_state.step_index = 0
     st.session_state.step_started = datetime.now()
     st.session_state.progress = 0.0
-    st.session_state.step_states = ["idle", "idle", "idle"]
+    st.session_state.step_states = ["idle", "idle", "idle", "idle", "idle"]
     st.session_state.logs = []
     add_log("INFO", "Initializing ChatGPT API connection")
     add_log("INFO", "Sending story generation prompt")
@@ -252,7 +321,7 @@ def reset():
     st.session_state.step_started = None
     st.session_state.progress = 0.0
     st.session_state.logs = []
-    st.session_state.step_states = ["idle", "idle", "idle"]
+    st.session_state.step_states = ["idle", "idle", "idle", "idle", "idle"]
 
 
 def tick():
@@ -286,9 +355,11 @@ def tick():
 # =========================
 # Title
 # =========================
-st.markdown('<div class="page-title">StoryMorph: Story Creation + Automated Video Generation</div>',
+st.markdown('<div class="page-title">StoryMorph: <br> From Imagination to Animation – Fully Automated<br>',
             unsafe_allow_html=True)
-st.markdown('<div class="page-sub">"From Imagination to Animation — Fully Automated -> Ready for Social Media!"</div>',
+st.markdown('<div class="page-sub">Choose Topic + Create Original Script + Create Video and Narration</div>',
+            unsafe_allow_html=True)
+st.markdown('<div class="page-sub">Ready for Social Media!</div>',
             unsafe_allow_html=True)
 
 # >>> Shell anchor (controls the subtle outer wrapper via --shell-*) <<<
@@ -320,7 +391,8 @@ with col_timing:
         duration_text = "less than a minute" if delta < timedelta(
             minutes=1) else f"{int(delta.total_seconds() // 60)} min"
     else:
-        duration_text = "—"
+        duration_text = "–"
+        duration_text = "–"
     st.markdown(f"""
         <div class="card top">
           <div>
@@ -345,14 +417,16 @@ with st.container():
                 "btn-start",
                 css_styles="""
                 button {
-                    background: #05472A !important;        /* green */
-                    border: 1px solid #158e4e !important;
+                    background: rgb(var(--btn-start-bg)) !important;
+                    border-width: calc(var(--use-borders) * var(--border-width-on) + (1 - var(--use-borders)) * var(--border-width-off)) !important;
+                    border-style: solid !important;
+                    border-color: rgba(var(--btn-start-border), calc(var(--use-borders) * var(--border-opacity-on) + (1 - var(--use-borders)) * var(--border-opacity-off))) !important;
                     color: #ffffff !important; font-weight: 800;
                     box-shadow: none !important;
                 }
                 button:disabled {
-                    background: #126c3e !important;   /* slightly darker than current #157a46 */
-                    border-color: #0f5b33 !important;
+                    background: #126c3e !important;
+                    border-color: rgba(15, 91, 51, 0.5) !important;
                     color: #d9f3e5 !important;
                     opacity: 0.92 !important;
                 }
@@ -369,14 +443,16 @@ with st.container():
                 "btn-stop",
                 css_styles="""
                 button {
-                    background: #b43838 !important;         /* red */
-                    border: 1px solid #9b3232 !important;
+                    background: rgb(var(--btn-stop-bg)) !important;
+                    border-width: calc(var(--use-borders) * var(--border-width-on) + (1 - var(--use-borders)) * var(--border-width-off)) !important;
+                    border-style: solid !important;
+                    border-color: rgba(var(--btn-stop-border), calc(var(--use-borders) * var(--border-opacity-on) + (1 - var(--use-borders)) * var(--border-opacity-off))) !important;
                     color: #ffffff !important; font-weight: 800;
                     box-shadow: none !important;
                 }
                 button:disabled {
-                    background: #5f2020 !important;   /* darker than current #7a2a2a */
-                    border-color: #4e1a1a !important;
+                    background: #5f2020 !important;
+                    border-color: rgba(78, 26, 26, 0.5) !important;
                     color: #f2dede !important;
                     opacity: 0.92 !important;
                 }
@@ -393,14 +469,16 @@ with st.container():
                 "btn-reset",
                 css_styles="""
                 button {
-                    background: #0f141b !important;          /* black */
-                    border: 1px solid #323c4a !important;
+                    background: rgb(var(--btn-reset-bg)) !important;
+                    border-width: calc(var(--use-borders) * var(--border-width-on) + (1 - var(--use-borders)) * var(--border-width-off)) !important;
+                    border-style: solid !important;
+                    border-color: rgba(var(--btn-reset-border), calc(var(--use-borders) * var(--border-opacity-on) + (1 - var(--use-borders)) * var(--border-opacity-off))) !important;
                     color: #eaeef6 !important; font-weight: 800;
                     box-shadow: none !important;
                 }
                 button:disabled {
-                    background: #0b0f15 !important;          /* dimmed black */
-                    border-color: #2a3340 !important;
+                    background: #0b0f15 !important;
+                    border-color: rgba(42, 51, 64, 0.5) !important;
                     color: #9aa3ad !important;
                     opacity: 0.9 !important;
                 }
@@ -425,14 +503,14 @@ with st.container():
     """, unsafe_allow_html=True)
 
 # =========================
-# WORKFLOW STEPS (group box)
+# WORKFLOW STEPS (group box) - Now with 5 steps
 # =========================
 st.markdown('<div class="section-title">WORKFLOW STEPS</div>', unsafe_allow_html=True)
 with st.container():
     st.markdown('<div id="steps-anchor"></div>', unsafe_allow_html=True)
 
-    s1, s2, s3 = st.columns(3, gap="small")
-    for i, col in enumerate((s1, s2, s3)):
+    s1, s2, s3, s4, s5 = st.columns(5, gap="small")
+    for i, col in enumerate((s1, s2, s3, s4, s5)):
         step = STEPS[i]
         state = st.session_state.step_states[i]
         card_cls = "card step-card" if state == "idle" else (
@@ -469,23 +547,27 @@ for ts, level, msg in st.session_state.logs[-400:]:
 logs_html = f"""
 <style>
 .lg-panel {{
-  background: rgba(20,26,36,0.50);
+  background: rgba(20,26,36,{st.session_state.get('glass_alpha', 0.15)});
   border: 1px solid rgba(85,102,130,0.40);
-  border-radius: 14px;
-  height: 100%;                       /* fill the iframe */
-  padding: 16px 16px 22px;            /* keep extra bottom padding */
+  border-radius: 17px;
+  padding: 28px 32px;
+  backdrop-filter: blur({st.session_state.get('glass_blur', 12)}px);
+  -webkit-backdrop-filter: blur({st.session_state.get('glass_blur', 12)}px);
   box-sizing: border-box;
+  height: 100%;
 }}
-.lg-scroll {{ height: 360px; overflow:auto; padding:8px 2px 8px 2px, box-sizing: border-box;; }}
+.lg-scroll {{ height: 360px; overflow:auto; padding:8px 2px 8px 2px; box-sizing: border-box; }}
 .lg-grid   {{ display:grid; grid-auto-rows:min-content; row-gap:10px; }}
 
 .lg-card {{
-  background: rgba(26,34,45,0.78);
+  background: rgba(26,34,45,{st.session_state.get('glass_alpha', 0.15)});
   border: 1px solid rgba(95,110,132,0.50);
   border-radius: 10px;
   padding: 12px 16px;
   display:grid; grid-template-columns: 110px 1fr; gap:12px; align-items:center;
   color:#e8eef7; font-family: "Segoe UI", Inter, system-ui, -apple-system, Arial, sans-serif;
+  backdrop-filter: blur({st.session_state.get('glass_blur', 12)}px);
+  -webkit-backdrop-filter: blur({st.session_state.get('glass_blur', 12)}px);
 }}
 .lg-card.success {{ border-color: rgba(24,151,78,1); }}
 .lg-card.error   {{ border-color: rgba(220,70,70,1); }}
