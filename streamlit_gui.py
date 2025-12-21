@@ -57,10 +57,13 @@ st.markdown("""
 
   /* ===== Button Colors (RGB format for flexibility) ===== */
   --btn-start-bg:     5, 71, 42;           /* green background */
+  --btn-start-alpha:  0.53;                /* green transparency */
   --btn-start-border: 21, 142, 78;         /* green border */
   --btn-stop-bg:      180, 56, 56;         /* red background */
+  --btn-stop-alpha:   0.53;                /* red transparency */
   --btn-stop-border:  155, 50, 50;         /* red border */
   --btn-reset-bg:     15, 20, 27;          /* black background */
+  --btn-reset-alpha:  0.53;                /* black transparency */
   --btn-reset-border: 50, 60, 74;          /* grey border */
 
   /* ===== Shared Box Colors & Transparency ===== */
@@ -195,6 +198,7 @@ div[data-testid="stVerticalBlock"]:has(#steps-anchor)::after {
   color:#fff;
   backdrop-filter: blur(var(--step-glass-blur));
   -webkit-backdrop-filter: blur(var(--step-glass-blur));
+  transition: none;
 }
 .card.error { 
   background: rgba(var(--step-error-color), 0.60);
@@ -202,6 +206,7 @@ div[data-testid="stVerticalBlock"]:has(#steps-anchor)::after {
   border-style: solid;
   border-color: rgba(var(--step-error-color), calc(var(--use-borders) * var(--border-opacity-on) + (1 - var(--use-borders)) * var(--border-opacity-off)));
   color:#fff;
+  transition: none;
 }
 
 /* ===== Step cards ===== */
@@ -390,7 +395,6 @@ with col_timing:
             minutes=1) else f"{int(delta.total_seconds() // 60)} min"
     else:
         duration_text = "–"
-        duration_text = "–"
     st.markdown(f"""
         <div class="card top">
           <div>
@@ -415,15 +419,17 @@ with st.container():
                 "btn-start",
                 css_styles="""
                 button {
-                    background: rgb(var(--btn-start-bg)) !important;
+                    background: rgba(var(--btn-start-bg), var(--btn-start-alpha)) !important;
                     border-width: calc(var(--use-borders) * var(--border-width-on) + (1 - var(--use-borders)) * var(--border-width-off)) !important;
                     border-style: solid !important;
                     border-color: rgba(var(--btn-start-border), calc(var(--use-borders) * var(--border-opacity-on) + (1 - var(--use-borders)) * var(--border-opacity-off))) !important;
                     color: #ffffff !important; font-weight: 800;
                     box-shadow: none !important;
+                    backdrop-filter: blur(var(--glass-blur)) !important;
+                    -webkit-backdrop-filter: blur(var(--glass-blur)) !important;
                 }
                 button:disabled {
-                    background: #126c3e !important;
+                    background: rgba(18, 108, 62, 0.25) !important;
                     border-color: rgba(15, 91, 51, 0.5) !important;
                     color: #d9f3e5 !important;
                     opacity: 0.92 !important;
@@ -441,15 +447,17 @@ with st.container():
                 "btn-stop",
                 css_styles="""
                 button {
-                    background: rgb(var(--btn-stop-bg)) !important;
+                    background: rgba(var(--btn-stop-bg), var(--btn-stop-alpha)) !important;
                     border-width: calc(var(--use-borders) * var(--border-width-on) + (1 - var(--use-borders)) * var(--border-width-off)) !important;
                     border-style: solid !important;
                     border-color: rgba(var(--btn-stop-border), calc(var(--use-borders) * var(--border-opacity-on) + (1 - var(--use-borders)) * var(--border-opacity-off))) !important;
                     color: #ffffff !important; font-weight: 800;
                     box-shadow: none !important;
+                    backdrop-filter: blur(var(--glass-blur)) !important;
+                    -webkit-backdrop-filter: blur(var(--glass-blur)) !important;
                 }
                 button:disabled {
-                    background: #5f2020 !important;
+                    background: rgba(95, 32, 32, 0.25) !important;
                     border-color: rgba(78, 26, 26, 0.5) !important;
                     color: #f2dede !important;
                     opacity: 0.92 !important;
@@ -467,15 +475,17 @@ with st.container():
                 "btn-reset",
                 css_styles="""
                 button {
-                    background: rgb(var(--btn-reset-bg)) !important;
+                    background: rgba(var(--btn-reset-bg), var(--btn-reset-alpha)) !important;
                     border-width: calc(var(--use-borders) * var(--border-width-on) + (1 - var(--use-borders)) * var(--border-width-off)) !important;
                     border-style: solid !important;
                     border-color: rgba(var(--btn-reset-border), calc(var(--use-borders) * var(--border-opacity-on) + (1 - var(--use-borders)) * var(--border-opacity-off))) !important;
                     color: #eaeef6 !important; font-weight: 800;
                     box-shadow: none !important;
+                    backdrop-filter: blur(var(--glass-blur)) !important;
+                    -webkit-backdrop-filter: blur(var(--glass-blur)) !important;
                 }
                 button:disabled {
-                    background: #0b0f15 !important;
+                    background: rgba(11, 15, 21, 0.25) !important;
                     border-color: rgba(42, 51, 64, 0.5) !important;
                     color: #9aa3ad !important;
                     opacity: 0.9 !important;
@@ -601,5 +611,5 @@ st_html(logs_html, height=440, scrolling=False)
 # =========================
 if st.session_state.running and not st.session_state.stop_flag and not st.session_state.error:
     tick()
-    time.sleep(0.06)
+    time.sleep(0.17)
     st.rerun()
