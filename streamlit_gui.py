@@ -151,7 +151,7 @@ div[data-testid="stAppViewContainer"] .block-container
 html, body, [class*="css"] { font-family: "Segoe UI", Inter, system-ui, -apple-system, Arial, sans-serif; color: #e9eef7; }
 .page-title    { text-align:center; margin: 10px 0 6px 0; font-weight: 900; font-size: 40px; letter-spacing: .2px; color:#ffffff; }
 .page-sub      { text-align:center; margin-bottom: 18px; font-weight: 800; font-size: 26px; color:#cfd6df; }
-.section-title { margin: 18px 0 8px 0; font-weight: 800; font-size: 22px; color:#ffffff; }
+.section-title { margin: 18px 0 8px 0; font-weight: 800; font-size: 22px; color:#cfd6df; }
 .section-title.center { text-align:center; }
 
 /* ===== Group boxes (ONLY for the two sections we want) =====
@@ -191,31 +191,29 @@ div[data-testid="stVerticalBlock"]:has(#steps-anchor)::after {
 }
 .card.top { min-height: 120px; display:flex; align-items:center; justify-content:center; text-align:center; }
 .card.done  { 
-  background: rgba(var(--step-done-color), var(--step-glass-alpha));
-  border-width: calc(var(--use-borders) * var(--border-width-on) + (1 - var(--use-borders)) * var(--border-width-off));
-  border-style: solid;
-  border-color: rgba(var(--step-done-color), calc(var(--use-borders) * var(--border-opacity-on) + (1 - var(--use-borders)) * var(--border-opacity-off)));
-  color:#fff;
-  backdrop-filter: blur(var(--step-glass-blur));
-  -webkit-backdrop-filter: blur(var(--step-glass-blur));
-  transition: none;
+  background: rgba(var(--step-done-color), var(--step-glass-alpha)) !important;
+  border-width: calc(var(--use-borders) * var(--border-width-on) + (1 - var(--use-borders)) * var(--border-width-off)) !important;
+  border-style: solid !important;
+  border-color: rgba(var(--step-done-color), calc(var(--use-borders) * var(--border-opacity-on) + (1 - var(--use-borders)) * var(--border-opacity-off))) !important;
+  color:#fff !important;
+  backdrop-filter: blur(var(--step-glass-blur)) !important;
+  -webkit-backdrop-filter: blur(var(--step-glass-blur)) !important;
 }
 .card.error { 
-  background: rgba(var(--step-error-color), 0.60);
-  border-width: calc(var(--use-borders) * var(--border-width-on) + (1 - var(--use-borders)) * var(--border-width-off));
-  border-style: solid;
-  border-color: rgba(var(--step-error-color), calc(var(--use-borders) * var(--border-opacity-on) + (1 - var(--use-borders)) * var(--border-opacity-off)));
-  color:#fff;
-  transition: none;
+  background: rgba(var(--step-error-color), 0.60) !important;
+  border-width: calc(var(--use-borders) * var(--border-width-on) + (1 - var(--use-borders)) * var(--border-width-off)) !important;
+  border-style: solid !important;
+  border-color: rgba(var(--step-error-color), calc(var(--use-borders) * var(--border-opacity-on) + (1 - var(--use-borders)) * var(--border-opacity-off))) !important;
+  color:#fff !important;
 }
 
 /* ===== Step cards ===== */
-.step-card  { text-align:center; padding: 17px; }
+.step-card  { text-align:center; padding: 17px; transition: background 0.4s ease, border-color 0.4s ease !important; }
 .step-title { font-weight: 840; letter-spacing: .2px; display:block; margin-bottom:6px; }
 .step-desc  { opacity:.53; }
 
 /* ===== Status badge ===== */
-.badge { display:inline-block; min-width: 98px; padding: 6px 12px; border-radius: 999px; font-weight: 800; color:#fff; }
+.badge { display:inline-block; min-width: 98px; padding: 6px 12px; border-radius: 999px; font-weight: 800; color:#cfd6df; }
 .badge.idle    { background:#46505F; }
 .badge.running { background: rgb(24,151,78); }
 .badge.error   { background: rgb(200,60,60); }
@@ -223,13 +221,15 @@ div[data-testid="stVerticalBlock"]:has(#steps-anchor)::after {
 /* ===== Progress bar ===== */
 .progress-wrap {
   width: 100%;
-  background: rgba(38,46,60,0.62);
-  border: 1px solid rgba(85,102,130,0.72);
+  background: rgba(var(--box-bg-color), var(--box-bg-alpha));
+  border: 1px solid rgba(var(--box-border-color), var(--box-border-alpha));
   border-radius: 10px;
   position: relative;
   overflow: hidden;
   color:#fff;
   margin: 6px 0;
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
 }
 .progress-bar   { height:100%; width:0%; background: rgb(24,151,78); transition: width .12s linear; }
 .progress-label { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-weight:800; }
@@ -347,8 +347,10 @@ def tick():
         add_log("INFO", f"Step {idx + 1}/{len(STEPS)}: {step['desc']}")
 
     if step_pct >= 1.0:
-        st.session_state.step_states[idx] = "done"
-        add_log("SUCCESS", f"{step['title']} completed.")
+        # Only update state if it's actually changing
+        if st.session_state.step_states[idx] != "done":
+            st.session_state.step_states[idx] = "done"
+            add_log("SUCCESS", f"{step['title']} completed.")
         st.session_state.step_index += 1
         if st.session_state.step_index < len(STEPS):
             st.session_state.step_started = datetime.now()
@@ -360,7 +362,9 @@ def tick():
 # =========================
 # Title
 # =========================
-st.markdown('<div class="page-title">StoryMorph: <br> From Imagination to Animation – Fully Automated<br>',
+st.markdown('<div class="page-title">StoryMorph: <br>',
+            unsafe_allow_html=True)
+st.markdown('<div class="page-sub">From Imagination to Animation – Fully Automated<br>',
             unsafe_allow_html=True)
 st.markdown('<div class="page-sub">Create your original social-media-ready videos, in one click!</div>',
             unsafe_allow_html=True)
@@ -407,7 +411,7 @@ with col_timing:
 # =========================
 # Workflow Controls + Progress (group box)
 # =========================
-st.markdown('<div class="section-title">Workflow Controls</div>', unsafe_allow_html=True)
+st.markdown('<div class="section-title">&nbsp&nbspWorkflow Controls</div>', unsafe_allow_html=True)
 with st.container():
     st.markdown('<div id="controls-anchor"></div>', unsafe_allow_html=True)
 
@@ -423,7 +427,7 @@ with st.container():
                     border-width: calc(var(--use-borders) * var(--border-width-on) + (1 - var(--use-borders)) * var(--border-width-off)) !important;
                     border-style: solid !important;
                     border-color: rgba(var(--btn-start-border), calc(var(--use-borders) * var(--border-opacity-on) + (1 - var(--use-borders)) * var(--border-opacity-off))) !important;
-                    color: #ffffff !important; font-weight: 800;
+                    color: #cfd6df !important; font-weight: 800;
                     box-shadow: none !important;
                     backdrop-filter: blur(var(--glass-blur)) !important;
                     -webkit-backdrop-filter: blur(var(--glass-blur)) !important;
@@ -451,7 +455,7 @@ with st.container():
                     border-width: calc(var(--use-borders) * var(--border-width-on) + (1 - var(--use-borders)) * var(--border-width-off)) !important;
                     border-style: solid !important;
                     border-color: rgba(var(--btn-stop-border), calc(var(--use-borders) * var(--border-opacity-on) + (1 - var(--use-borders)) * var(--border-opacity-off))) !important;
-                    color: #ffffff !important; font-weight: 800;
+                    color: #cfd6df !important; font-weight: 800;
                     box-shadow: none !important;
                     backdrop-filter: blur(var(--glass-blur)) !important;
                     -webkit-backdrop-filter: blur(var(--glass-blur)) !important;
@@ -479,7 +483,7 @@ with st.container():
                     border-width: calc(var(--use-borders) * var(--border-width-on) + (1 - var(--use-borders)) * var(--border-width-off)) !important;
                     border-style: solid !important;
                     border-color: rgba(var(--btn-reset-border), calc(var(--use-borders) * var(--border-opacity-on) + (1 - var(--use-borders)) * var(--border-opacity-off))) !important;
-                    color: #eaeef6 !important; font-weight: 800;
+                    color: #cfd6df !important; font-weight: 800;
                     box-shadow: none !important;
                     backdrop-filter: blur(var(--glass-blur)) !important;
                     -webkit-backdrop-filter: blur(var(--glass-blur)) !important;
@@ -513,7 +517,7 @@ with st.container():
 # =========================
 # WORKFLOW STEPS (group box) - Now with 5 steps
 # =========================
-st.markdown('<div class="section-title">WORKFLOW STEPS</div>', unsafe_allow_html=True)
+st.markdown('<div class="section-title">&nbsp&nbspWorkflow Steps</div>', unsafe_allow_html=True)
 with st.container():
     st.markdown('<div id="steps-anchor"></div>', unsafe_allow_html=True)
 
@@ -524,8 +528,10 @@ with st.container():
         card_cls = "card step-card" if state == "idle" else (
             "card step-card done" if state == "done" else "card step-card error")
         with col:
+            # Use a container with a key to prevent flickering
+            container_key = f"step_card_{i}"
             st.markdown(f"""
-                <div class="{card_cls}">
+                <div class="{card_cls}" key="{container_key}">
                   <span class="step-title">{step["title"]}</span>
                   <div class="step-desc">{step["desc"]}</div>
                 </div>
@@ -534,7 +540,7 @@ with st.container():
 # =========================
 # Live Logs (iframe; no bullets; timestamp centered under pill)
 # =========================
-st.markdown('<div class="section-title">Live Logs</div>', unsafe_allow_html=True)
+st.markdown('<div class="section-title">&nbsp&nbsp&nbsp&nbspLive Logs</div>', unsafe_allow_html=True)
 
 entries = []
 for ts, level, msg in st.session_state.logs[-400:]:
@@ -611,5 +617,5 @@ st_html(logs_html, height=440, scrolling=False)
 # =========================
 if st.session_state.running and not st.session_state.stop_flag and not st.session_state.error:
     tick()
-    time.sleep(0.17)
+    time.sleep(0.0002)
     st.rerun()
