@@ -20,15 +20,16 @@ st.set_page_config(page_title="Python Workflow Monitor", layout="wide")
 # =========================
 st.markdown("""
 <style>
-/* ===== Sleek, darker pastel background ===== */
+/* ===== Sleek, darker background with modern aesthetic ===== */
 .stApp {
   background:
-    radial-gradient(130% 100% at 0%   0%,   rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.06) 40%, rgba(255,255,255,0.00) 62%),
-    radial-gradient(130% 100% at 100% 0%,   rgba(255,255,255,0.14) 0%, rgba(255,255,255,0.06) 40%, rgba(255,255,255,0.00) 62%),
-    radial-gradient(120% 80% at 82% 18%,    rgba(186,144,213,0.30), rgba(186,144,213,0.00) 62%),
-    radial-gradient(120% 80% at 25% 30%,    rgba(121,181,233,0.28), rgba(121,181,233,0.00) 62%),
-    radial-gradient(120% 80% at 30% 78%,    rgba(110,231,183,0.22), rgba(110,231,183,0.00) 62%),
-    #141b24;
+    radial-gradient(140% 120% at 0%   0%,   rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 35%, rgba(255,255,255,0.00) 60%),
+    radial-gradient(140% 120% at 100% 0%,   rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 35%, rgba(255,255,255,0.00) 60%),
+    radial-gradient(150% 100% at 85% 15%,   rgba(120,100,180,0.12), rgba(120,100,180,0.00) 65%),
+    radial-gradient(140% 90%  at 20% 25%,   rgba(80,140,200,0.10), rgba(80,140,200,0.00) 60%),
+    radial-gradient(130% 90%  at 30% 85%,   rgba(60,180,140,0.08), rgba(60,180,140,0.00) 65%),
+    linear-gradient(135deg, #0a0e14 0%, #0d1117 50%, #0a0e14 100%),
+    #0a0e14;
   background-attachment: fixed;
 }
 
@@ -57,13 +58,13 @@ st.markdown("""
 
   /* ===== Button Colors (RGB format for flexibility) ===== */
   --btn-start-bg:     5, 71, 42;           /* green background */
-  --btn-start-alpha:  0.53;                /* green transparency */
+  --btn-start-alpha:  0.48;                /* green transparency */
   --btn-start-border: 21, 142, 78;         /* green border */
   --btn-stop-bg:      180, 56, 56;         /* red background */
-  --btn-stop-alpha:   0.53;                /* red transparency */
+  --btn-stop-alpha:   0.48;                /* red transparency */
   --btn-stop-border:  155, 50, 50;         /* red border */
   --btn-reset-bg:     15, 20, 27;          /* black background */
-  --btn-reset-alpha:  0.53;                /* black transparency */
+  --btn-reset-alpha:  0.48;                /* black transparency */
   --btn-reset-border: 50, 60, 74;          /* grey border */
 
   /* ===== Shared Box Colors & Transparency ===== */
@@ -362,7 +363,7 @@ def tick():
 # =========================
 # Title
 # =========================
-st.markdown('<div class="page-title">StoryMorph: <br>',
+st.markdown('<div class="page-title">StoryMorph <br>',
             unsafe_allow_html=True)
 st.markdown('<div class="page-sub">From Imagination to Animation – Fully Automated<br>',
             unsafe_allow_html=True)
@@ -491,7 +492,7 @@ with st.container():
                 button:disabled {
                     background: rgba(11, 15, 21, 0.25) !important;
                     border-color: rgba(42, 51, 64, 0.5) !important;
-                    color: #9aa3ad !important;
+                    color: #cfd6df !important;
                     opacity: 0.9 !important;
                 }
                 button:hover { filter: none !important; }
