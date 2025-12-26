@@ -23,13 +23,36 @@ st.markdown("""
 /* ===== Sleek, darker background with modern aesthetic ===== */
 .stApp {
   background:
-    radial-gradient(140% 120% at 0%   0%,   rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 35%, rgba(255,255,255,0.00) 60%),
-    radial-gradient(140% 120% at 100% 0%,   rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 35%, rgba(255,255,255,0.00) 60%),
-    radial-gradient(150% 100% at 85% 15%,   rgba(120,100,180,0.12), rgba(120,100,180,0.00) 65%),
-    radial-gradient(140% 90%  at 20% 25%,   rgba(80,140,200,0.10), rgba(80,140,200,0.00) 60%),
-    radial-gradient(130% 90%  at 30% 85%,   rgba(60,180,140,0.08), rgba(60,180,140,0.00) 65%),
-    linear-gradient(135deg, #0a0e14 0%, #0d1117 50%, #0a0e14 100%),
-    #0a0e14;
+    /* subtle light corners */
+    radial-gradient(120% 110% at 0% 0%,
+      rgba(255,255,255,0.035) 0%,
+      rgba(255,255,255,0.012) 38%,
+      rgba(255,255,255,0.0) 70%),
+
+    radial-gradient(120% 110% at 100% 0%,
+      rgba(255,255,255,0.035) 0%,
+      rgba(255,255,255,0.012) 38%,
+      rgba(255,255,255,0.0) 70%),
+
+    /* main colour blobs (bigger, stronger, slower fade) */
+    radial-gradient(900px 700px at 15% 20%,
+      rgba(80,140,255,0.22) 0%,
+      rgba(80,140,255,0.10) 35%,
+      rgba(80,140,255,0.0) 70%),
+
+    radial-gradient(820px 650px at 80% 18%,
+      rgba(170,90,255,0.22) 0%,
+      rgba(170,90,255,0.10) 35%,
+      rgba(170,90,255,0.0) 72%),
+
+    radial-gradient(900px 720px at 70% 85%,
+      rgba(50,220,170,0.18) 0%,
+      rgba(50,220,170,0.08) 38%,
+      rgba(50,220,170,0.0) 74%),
+
+    /* base */
+    linear-gradient(135deg, #070a10 0%, #0b1220 50%, #070a10 100%);
+
   background-attachment: fixed;
 }
 
@@ -38,12 +61,12 @@ st.markdown("""
    - Use --shell-* to control the faint wrapper that sometimes 'frames' everything */
 :root{
   /* ===== Glassmorphism Settings ===== */
-  --glass-blur:      8px;                 /* backdrop blur amount for glassmorphic effect */
-  --glass-alpha:     0.26;                 /* transparency for glassmorphic surfaces (lower = more transparent) */
+  --glass-blur:      4px;                 /* backdrop blur amount for glassmorphic effect */
+  --glass-alpha:     0.08;                 /* transparency for glassmorphic surfaces (lower = more transparent) */
 
   /* ===== Active/Done Step Glassmorphism ===== */
-  --step-glass-alpha: 0.25;                /* transparency for active/done steps */
-  --step-glass-blur:  10px;                /* blur for active/done steps */
+  --step-glass-blur:  4px;                /* blur for active/done steps */
+  --step-glass-alpha: 0.26;                /* transparency for active/done steps */
 
   /* ===== Border Toggle (1 = with border, 0 = without border) ===== */
   --use-borders: 0;                        /* Toggle between border styles: 1 = borders ON, 0 = borders OFF */
@@ -58,13 +81,13 @@ st.markdown("""
 
   /* ===== Button Colors (RGB format for flexibility) ===== */
   --btn-start-bg:     5, 71, 42;           /* green background */
-  --btn-start-alpha:  0.48;                /* green transparency */
+  --btn-start-alpha:  0.88;                /* green transparency */
   --btn-start-border: 21, 142, 78;         /* green border */
   --btn-stop-bg:      180, 56, 56;         /* red background */
-  --btn-stop-alpha:   0.48;                /* red transparency */
+  --btn-stop-alpha:   0.88;                /* red transparency */
   --btn-stop-border:  155, 50, 50;         /* red border */
   --btn-reset-bg:     15, 20, 27;          /* black background */
-  --btn-reset-alpha:  0.48;                /* black transparency */
+  --btn-reset-alpha:  0.88;                /* black transparency */
   --btn-reset-border: 50, 60, 74;          /* grey border */
 
   /* ===== Shared Box Colors & Transparency ===== */
@@ -150,7 +173,7 @@ div[data-testid="stAppViewContainer"] .block-container
 
 /* ===== Base type & titles ===== */
 html, body, [class*="css"] { font-family: "Segoe UI", Inter, system-ui, -apple-system, Arial, sans-serif; color: #e9eef7; }
-.page-title    { text-align:center; margin: 10px 0 6px 0; font-weight: 900; font-size: 40px; letter-spacing: .2px; color:#ffffff; }
+.page-title    { text-align:center; margin: 10px 0 6px 0; font-weight: 900; font-size: 40px; letter-spacing: .2px; color:#cfd6df; }
 .page-sub      { text-align:center; margin-bottom: 18px; font-weight: 800; font-size: 26px; color:#cfd6df; }
 .section-title { margin: 18px 0 8px 0; font-weight: 800; font-size: 22px; color:#cfd6df; }
 .section-title.center { text-align:center; }
@@ -164,8 +187,8 @@ div[data-testid="stVerticalBlock"]:has(#steps-anchor) {
   border: 1px solid rgba(var(--box-border-color), var(--box-border-alpha)) !important;
   border-radius: var(--box-radius) !important;
   padding: var(--group-pad-y) var(--group-pad-x) !important;
-  backdrop-filter: blur(var(--glass-blur)) !important;
-  -webkit-backdrop-filter: blur(var(--glass-blur)) !important;
+  backdrop-filter: blur(var(--glass-blur)) saturate(140%) !important;
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(140%) !important;
 }
 div[data-testid="stVerticalBlock"]:has(#controls-anchor) > div:first-child,
 div[data-testid="stVerticalBlock"]:has(#steps-anchor)    > div:first-child { margin-top: 0 !important; }
@@ -196,9 +219,9 @@ div[data-testid="stVerticalBlock"]:has(#steps-anchor)::after {
   border-width: calc(var(--use-borders) * var(--border-width-on) + (1 - var(--use-borders)) * var(--border-width-off)) !important;
   border-style: solid !important;
   border-color: rgba(var(--step-done-color), calc(var(--use-borders) * var(--border-opacity-on) + (1 - var(--use-borders)) * var(--border-opacity-off))) !important;
-  color:#fff !important;
-  backdrop-filter: blur(var(--step-glass-blur)) !important;
-  -webkit-backdrop-filter: blur(var(--step-glass-blur)) !important;
+  color:#cfd6df !important;
+  backdrop-filter: blur(var(--step-glass-blur)) saturate(140%) important;
+  -webkit-backdrop-filter: blur(var(--step-glass-blur)) saturate(140%) !important;
 }
 .card.error { 
   background: rgba(var(--step-error-color), 0.60) !important;
@@ -210,8 +233,8 @@ div[data-testid="stVerticalBlock"]:has(#steps-anchor)::after {
 
 /* ===== Step cards ===== */
 .step-card  { text-align:center; padding: 17px; transition: background 0.4s ease, border-color 0.4s ease !important; }
-.step-title { font-weight: 840; letter-spacing: .2px; display:block; margin-bottom:6px; }
-.step-desc  { opacity:.53; }
+.step-title { font-size: 20px; font-weight: 620; letter-spacing: .2px; display:block; margin-bottom:6px; }
+.step-desc  { font-size: 17px; opacity:.53; }
 
 /* ===== Status badge ===== */
 .badge { display:inline-block; min-width: 98px; padding: 6px 12px; border-radius: 999px; font-weight: 800; color:#cfd6df; }
@@ -363,11 +386,11 @@ def tick():
 # =========================
 # Title
 # =========================
-st.markdown('<div class="page-title">StoryMorph <br>',
+st.markdown('<div class="page-title">STORYMORPH<br>',
             unsafe_allow_html=True)
-st.markdown('<div class="page-sub">From Imagination to Animation – Fully Automated<br>',
+st.markdown('<div class="page-sub">YOUR IMAGINATION ➡ YOUR ANIMATION<br>',
             unsafe_allow_html=True)
-st.markdown('<div class="page-sub">Create your original social-media-ready videos, in one click!</div>',
+st.markdown('<div class="page-sub">create your own original videos and upload to social media, fully automated!!!</div>',
             unsafe_allow_html=True)
 
 # >>> Shell anchor (controls the subtle outer wrapper via --shell-*) <<<
