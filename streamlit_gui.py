@@ -26,32 +26,39 @@ st.markdown("""
     /* subtle light corners */
     radial-gradient(120% 110% at 0% 0%,
       rgba(255,255,255,0.035) 0%,
-      rgba(255,255,255,0.012) 38%,
-      rgba(255,255,255,0.0) 70%),
+      rgba(255,255,255,0.012) 0%,
+      rgba(255,255,255,0.0) 0%),
 
     radial-gradient(120% 110% at 100% 0%,
       rgba(255,255,255,0.035) 0%,
-      rgba(255,255,255,0.012) 38%,
-      rgba(255,255,255,0.0) 70%),
+      rgba(255,255,255,0.012) 0%,
+      rgba(255,255,255,0.0) 0%),
 
     /* main colour blobs (bigger, stronger, slower fade) */
-    radial-gradient(900px 700px at 15% 20%,
+    radial-gradient(1300px 1300px at 20% 20%,
       rgba(80,140,255,0.22) 0%,
-      rgba(80,140,255,0.10) 35%,
-      rgba(80,140,255,0.0) 70%),
+      rgba(80,140,255,0.10) 53%,
+      rgba(80,140,255,0.0) 71%),
 
-    radial-gradient(820px 650px at 80% 18%,
+    radial-gradient(1300px 1300px at 80% 20%,
       rgba(170,90,255,0.22) 0%,
-      rgba(170,90,255,0.10) 35%,
-      rgba(170,90,255,0.0) 72%),
+      rgba(170,90,255,0.10) 53%,
+      rgba(170,90,255,0.0) 71%),
 
-    radial-gradient(900px 720px at 70% 85%,
-      rgba(50,220,170,0.18) 0%,
-      rgba(50,220,170,0.08) 38%,
-      rgba(50,220,170,0.0) 74%),
+    radial-gradient(1300px 1300px at 20% 80%,
+      rgba(170,90,255,0.22) 0%,
+      rgba(170,90,255,0.10) 53%,
+      rgba(170,90,255,0.0) 71%),
+
+    radial-gradient(1300px 1300px at 80% 80%,
+      rgba(80,140,255,0.22) 0%,
+      rgba(80,140,255,0.10) 53%,
+      rgba(80,140,255,0.0) 71%),
+
+ 
 
     /* base */
-    linear-gradient(135deg, #070a10 0%, #0b1220 50%, #070a10 100%);
+    linear-gradient(135deg, #070a10 0%, #0b1220 0%, #070a10 0%);
 
   background-attachment: fixed;
 }
@@ -61,12 +68,12 @@ st.markdown("""
    - Use --shell-* to control the faint wrapper that sometimes 'frames' everything */
 :root{
   /* ===== Glassmorphism Settings ===== */
-  --glass-blur:      4px;                 /* backdrop blur amount for glassmorphic effect */
-  --glass-alpha:     0.08;                 /* transparency for glassmorphic surfaces (lower = more transparent) */
+  --glass-blur:      35px;                 /* backdrop blur amount for glassmorphic effect */
+  --glass-alpha:     0.02;                 /* transparency for glassmorphic surfaces (lower = more transparent) */
 
   /* ===== Active/Done Step Glassmorphism ===== */
-  --step-glass-blur:  4px;                /* blur for active/done steps */
-  --step-glass-alpha: 0.26;                /* transparency for active/done steps */
+  --step-glass-blur:  35px;                /* blur for active/done steps */
+  --step-glass-alpha: 0.02;                /* transparency for active/done steps */
 
   /* ===== Border Toggle (1 = with border, 0 = without border) ===== */
   --use-borders: 0;                        /* Toggle between border styles: 1 = borders ON, 0 = borders OFF */
@@ -187,8 +194,8 @@ div[data-testid="stVerticalBlock"]:has(#steps-anchor) {
   border: 1px solid rgba(var(--box-border-color), var(--box-border-alpha)) !important;
   border-radius: var(--box-radius) !important;
   padding: var(--group-pad-y) var(--group-pad-x) !important;
-  backdrop-filter: blur(var(--glass-blur)) saturate(140%) !important;
-  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(140%) !important;
+  backdrop-filter: blur(var(--glass-blur)) !important;
+  -webkit-backdrop-filter: blur(var(--glass-blur)) !important;
 }
 div[data-testid="stVerticalBlock"]:has(#controls-anchor) > div:first-child,
 div[data-testid="stVerticalBlock"]:has(#steps-anchor)    > div:first-child { margin-top: 0 !important; }
