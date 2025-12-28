@@ -73,7 +73,7 @@ st.markdown("""
 
   /* ===== Active/Done Step Glassmorphism ===== */
   --step-glass-blur:  35px;                /* blur for active/done steps */
-  --step-glass-alpha: 0.02;                /* transparency for active/done steps */
+  --step-glass-alpha: 0.35;                /* transparency for active/done steps */
 
   /* ===== Border Toggle (1 = with border, 0 = without border) ===== */
   --use-borders: 0;                        /* Toggle between border styles: 1 = borders ON, 0 = borders OFF */
@@ -105,7 +105,7 @@ st.markdown("""
   --box-radius:      17px;                 /* corner radius for boxes */
 
   /* ===== Card Colors & Transparency ===== */
-  --card-bg-color:   26, 34, 45;           /* RGB values for card background */
+  --card-bg-color:   10, 14, 20;           /* RGB values for card background */
   --card-bg-alpha:   var(--glass-alpha);   /* uses glassmorphism transparency */
   --card-border-color: 95, 110, 132;       /* RGB values for card border */
   --card-border-alpha: 0.50;               /* transparency for card borders (0-1) */
